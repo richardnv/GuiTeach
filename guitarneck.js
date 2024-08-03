@@ -228,6 +228,7 @@ GuitarNeck.prototype.addStringToNeck = function(newStringRootNote) {
     let fb_string_spacing = 30;
     let fb_edge_margin = 15;
     let stringCount = this.StringCount();
+    // watching for this change 
     let fb_string_area_height = (stringCount - 1) * fb_string_spacing;
     let stringY = fb_top + fb_edge_margin + fb_string_area_height;
     let newString = document.createElementNS(this.svgNS, 'line');    
