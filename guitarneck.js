@@ -167,7 +167,7 @@ GuitarNeck.prototype.adjustNeckWidth = function() {
     // Adjust the fingerboard width based on the last visible fret
     this.fingerBoard.setAttribute('width', newFingerBoardWidth);
     return this.lastFret.getAttribute('id');    
-}
+} 
 
 GuitarNeck.prototype.updateFrets = function() {
     let frets = this.svg.querySelectorAll('line.fret');
