@@ -141,7 +141,7 @@ GuitarNeck.prototype.addNotes = function() {
             let noteCircle = document.createElementNS(this.svgNS, "circle");
             noteCircle.setAttribute("class", "note");
             noteCircle.setAttribute("id", `note${note}s${i}f${f}`);            
-            noteCircle.setAttribute("cx", fretX - 15);git help -getComputedStyle
+            noteCircle.setAttribute("cx", fretX - 15);
             noteCircle.setAttribute("cy", stringY);
             noteCircle.setAttribute("r", "15"); 
             noteCircle.setAttribute("fill", "gray");
