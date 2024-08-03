@@ -10,7 +10,7 @@ function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.fingerBoard = null;
     this.nut = null;
     this.string_overlap_length_behind_nut = 10;    
-    this.lastFret = null;    
+    this.lastFret = 24;    
     this.containerId = "";
     this._allNotesAreHidden = false;
     this.svgNS = "http://www.w3.org/2000/svg";
@@ -166,8 +166,62 @@ GuitarNeck.prototype.adjustNeckWidth = function() {
     let newFingerBoardWidth = lastFretX - 10;
     // Adjust the fingerboard width based on the last visible fret
     this.fingerBoard.setAttribute('width', newFingerBoardWidth);
+    this.handleElementVisibility();
     return this.lastFret.getAttribute('id');    
 } 
+
+GuitarNeck.prototype.handleElementVisibility = function() {
+    let fret_index = parseInt(this.lastFret.getAttribute('data-fret-index'));    
+    //if (fret_index < this.fretCount) {
+        this.handleNoteVisibilityBasedOnLastFret(fret_index);
+        this.handleFretVisibilityBasedOnLastFret(fret_index);
+        this.hideInlayVisibilityBasedOnLastFret(fret_index);
+    // } 
+} 
+
+GuitarNeck.prototype.handleNoteVisibilityBasedOnLastFret = function(fret_index) {
+    let notes = this.svg.querySelectorAll('circle.note');
+    if (!this.AllNotesAreHidden()) {
+        notes.forEach(note => {
+            let note_fret_index = parseInt(note.getAttribute('data-fret'));
+            if (note_fret_index > fret_index) {
+                note.style.display = 'none';            
+            } else if (note_fret_index <= fret_index) {
+                if (note.style.display = 'none') {
+                    note.style.display = 'block';
+                }
+            }
+        });
+    } 
+}
+
+GuitarNeck.prototype.handleFretVisibilityBasedOnLastFret = function(fret_index) {
+    let frets = this.svg.querySelectorAll('line.fret');
+    frets.forEach(fret => {
+        let _fret_index = parseInt(fret.getAttribute('data-fret-index'));
+        if (_fret_index > fret_index) {
+            fret.style.display = 'none';
+        } else if (_fret_index <= fret_index) {
+            if (fret.style.display = 'none') {
+                fret.style.display = 'block';
+            }
+        }
+    });
+}
+
+GuitarNeck.prototype.hideInlayVisibilityBasedOnLastFret = function(fret_index) {
+    let inlays = this.svg.querySelectorAll('circle.inlay');
+    inlays.forEach(inlay => {
+        let inlay_fret_index = parseInt(inlay.getAttribute('data-fret-index'));
+        if (inlay_fret_index > fret_index) {
+            inlay.style.display = 'none';
+        } else if (inlay_fret_index <= fret_index) {
+            if (inlay.style.display = 'none') {
+                inlay.style.display = 'block';
+            }
+        }   
+    });
+}
 
 GuitarNeck.prototype.updateFrets = function() {
     let frets = this.svg.querySelectorAll('line.fret');
@@ -276,8 +330,12 @@ GuitarNeck.prototype.hideAllNotes = function() {
 
 GuitarNeck.prototype.showAllNotes = function() {
     const notes = this.svg.querySelectorAll('circle.note');
+    let last_fret_index = parseInt(this.lastFret.getAttribute('data-fret-index'));
     notes.forEach(note => {
-        note.style.display = 'block';
+        let note_fret_index = parseInt(note.getAttribute('data-fret'));
+        if (note_fret_index <= last_fret_index) {
+            note.style.display = 'block';
+        }
     });
     this._allNotesAreHidden = false;
 }
