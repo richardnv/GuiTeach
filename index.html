@@ -3,6 +3,13 @@
 <head>
     <title>GuiTeach</title>    
     <script src="guitarneck.js" type="text/javascript"></script>
+    <script src="note.js" type="text/javascript"></script>
+    <style>
+            .note-text {
+                font-size: 12px;
+                fill: white;
+            }
+    </style>
 </head>
 <body>
 	<header>
@@ -30,6 +37,15 @@
     window.onload = function() {
         guitarNeckInstance.render('guitar_neck_container');             
         guitarNeckInstance.adjustNeckWidth();
+
+        let notes = document.querySelectorAll('circle.note');
+        notes.forEach(note => {
+            note.addEventListener('mouseover', (event) => {
+                console.log(`Note ID: ${event.target.id}`);
+                console.log(`Note Spelling: ${event.target.getAttribute('data-note-spelling')}`);
+                // Additional logic for mouseover event can be added here
+            });
+        });
     }   
     
     window.onresize = function() {
@@ -57,5 +73,7 @@
         guitarNeckInstance.addStringToNeck(newStringRootNote);
         dialog.close();
     });
+    
+    
     
 </script>
