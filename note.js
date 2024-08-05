@@ -4,7 +4,6 @@ function Note(midiNumber) {
     this.octave = this.getOctave();
     this.frequency = this.getFrequency();
     this.noteSpelling = this.getNoteSpelling();
-
 }
 
 Note.prototype.toString = function() {
