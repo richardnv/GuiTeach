@@ -19,6 +19,10 @@
         <div id="guitar_neck_container">
 
         </div>    
+        <div id="note_display">
+            <h4>Note under cursor:</h4>
+            <p id="note_info"></p>
+        </div>
         <button id="addStringToNeckBtn">Add a String</button>
         <dialog id="addStringDialog">
             <form id="addAStringTuning" method="dialog">
@@ -37,13 +41,17 @@
     window.onload = function() {
         guitarNeckInstance.render('guitar_neck_container');             
         guitarNeckInstance.adjustNeckWidth();
-
-        let notes = document.querySelectorAll('circle.note');
-        notes.forEach(note => {
-            note.addEventListener('mouseover', (event) => {
-                console.log(`Note ID: ${event.target.id}`);
-                console.log(`Note Spelling: ${event.target.getAttribute('data-note-spelling')}`);
-                // Additional logic for mouseover event can be added here
+        let fingerings = document.querySelectorAll('.fingering');
+        fingerings.forEach(fingering => {
+            fingering.addEventListener('click', (event) => {
+                let noteInfo = document.getElementById('note_info');
+                let noteInfoText = "String: ";
+                noteInfoText += event.target.getAttribute('data-string') + ", Fret: ";                
+                noteInfoText += event.target.getAttribute('data-fret') + ", Note Name: ";
+                noteInfoText += event.target.getAttribute('data-note-name') + ", Note Number: ";            
+                noteInfoText += event.target.getAttribute('data-note-number') + ", Note Spelling: ";
+                noteInfoText += event.target.getAttribute('data-note-spelling');
+                noteInfo.innerText = noteInfoText;
             });
         });
     }   

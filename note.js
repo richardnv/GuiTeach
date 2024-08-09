@@ -47,3 +47,11 @@ Note.prototype.getNoteSpelling = function() {
     return this.noteName + this.octave;
 };
 
+Note.prototype.GetNoteInfo = function() {
+    return {
+        noteName: this.noteName,
+        noteOctave: this.octave,
+        noteFrequency: this.frequency,
+        noteSpelling: this.noteSpelling
+    };
+};
