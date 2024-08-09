@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GuiTeach</title>    
-    <script src="guitarneck.js" type="text/javascript"></script>
-    <script src="note.js" type="text/javascript"></script>
+    <title>GuiTeach</title>        
     <style>
         .note-text {
+            display: inherit;
             font-size: 12px;
             fill: white;
         }
     </style>
+    <script src="note.js" type="text/javascript"></script>
+    <script src="guitarneck.js" type="text/javascript"></script>    
 </head>
 <body>
 	<header>
@@ -39,7 +40,8 @@
     const guitarNeckInstance = new GuitarNeck();
 
     window.onload = function() {
-        guitarNeckInstance.render('guitar_neck_container');             
+        let svgCont = document.getElementById("guitar_neck_container");
+        svgCont.appendChild(guitarNeckInstance.render());             
         guitarNeckInstance.adjustNeckWidth();
         let fingerings = document.querySelectorAll('.fingering');
         fingerings.forEach(fingering => {
@@ -62,7 +64,7 @@
 
     function toggleAllNotes() {
         if (guitarNeckInstance.AllNotesAreHidden()) {
-            guitarNeckInstance.showAllNotes();
+            guitarNeckInstance.showAllNotes();            
             document.getElementById('toggleAllNotesBtn').innerText = 'Hide all Notes';
             return;
         }
@@ -83,3 +85,4 @@
     });
     
 </script>
+</html>
