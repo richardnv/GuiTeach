@@ -504,7 +504,7 @@ GuitarNeck.prototype.GetFingeringInfo = function(stringIndex, fretIndex) {
     };
 }
 
-GuitarNeck.prototype.ShowScale = function(scaleRootNote = "C", scaleType = "Major") {
+GuitarNeck.prototype.showScale = function(scaleRootNote = "C", scaleType = "Major") {
     let scaleNotes = this.GetScaleNotes(scaleRootNote, scaleType);
     console.log(scaleNotes);
     let noteCount = scaleNotes.length;
