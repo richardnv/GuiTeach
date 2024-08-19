@@ -1,5 +1,12 @@
 
 // Constructor function for GuitarNeck Prototype
+/**
+ * Represents a guitar neck.
+ * @constructor
+ * @param {number} fretCount - The number of frets on the guitar neck.
+ * @param {number[]} _tuningMidiNumbers - The MIDI numbers representing the tuning of the guitar strings.
+ */
+
 function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.svgNS = "http://www.w3.org/2000/svg";
     this.svg_right_margin = 50;
@@ -17,11 +24,16 @@ function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.defaultOverallHeight = 200;
     this.minHeight = 80;
     this.fretSpacing = 59;
-
+    this.string_spacing = 30;
 }
 
-GuitarNeck.prototype.render = function() {
+GuitarNeck.prototype.fingerboardEdgeMargin = function() {
+    return this.string_spacing / 2;
+}
 
+/// Handles the initial render of the fingerboard and its components, using the defaults values.
+/// @returns {SVGElement} The SVG element representing the guitar neck.
+GuitarNeck.prototype.render = function() {
     this.svg = document.createElementNS(this.svgNS, "svg");
     this.svg.setAttribute("id", "neckSvg");
     this.svg.setAttribute("width", window.innerWidth);
@@ -33,10 +45,12 @@ GuitarNeck.prototype.render = function() {
     // (This compensates zooming in and out of the page)
     this.fingerBoard = document.createElementNS(this.svgNS, "rect");
     this.fingerBoard.setAttribute("id", "fingerBoard");
-    this.fingerBoard.setAttribute("x", "40");
-    this.fingerBoard.setAttribute("y", "10");
-    this.fingerBoard.setAttribute("width", "1500");
-    this.fingerBoard.setAttribute("height", "180");
+    this.fingerBoard.setAttribute("x", "40");    
+    this.fingerBoard.setAttribute("y", 10);
+    this.fingerBoard.setAttribute("width", window.innerWidth);
+    let stringCount = this.StringCount();
+    let fingerboardEdgeMargin = this.fingerboardEdgeMargin();
+    this.fingerBoard.setAttribute("height", (this.string_spacing * (stringCount - 1)) + (fingerboardEdgeMargin * 2));
     this.fingerBoard.setAttribute("fill", "saddlebrown");    
     this.svg.appendChild(this.fingerBoard);
 
@@ -50,141 +64,173 @@ GuitarNeck.prototype.render = function() {
     this.nut.setAttribute("fill", "black");
     this.svg.appendChild(this.nut);
 
-    this.addFrets();
+    this.createFrets();
 
-    this.addInlays();
+    this.createInlays();
 
-    this.addStrings();
+    this.createStrings();
 
-    this.addFingerings();
+    this.createFingerings();
    
-    //let container = document.getElementById(this.containerId);
     return this.svg;
 };
 
-GuitarNeck.prototype.addFrets = function() {
-    let fretX = parseInt(this.nut.getAttribute("x")) + parseInt(this.nut.getAttribute("width")) - 20;
+GuitarNeck.prototype.createFrets = function() {    
     for (let i = 0; i <= this.fretCount; i++) {
-        let fret = document.createElementNS(this.svgNS, "line");
-        fret.setAttribute("class", "fret");
-        fret.setAttribute("id", `f${i}`);
-        fretX = i > 0 ? 50 + this.fretSpacing * i : fretX;
-        fret.setAttribute("x1", fretX);
-        fret.setAttribute("y1", "10");
-        fret.setAttribute("x2", fretX);
-        fret.setAttribute("y2", "190");
-        if (i == 0) {
-            fret.setAttribute("stroke", "black");
-            fret.setAttribute("stroke-width", "0");
-        } else {
-            fret.setAttribute("stroke", "silver");
-            fret.setAttribute("stroke-width", "5");
-        }
-
-        // add custom data attributes
-        fret.setAttribute("data-fret-index", i);
-
-        this.lastFret = fret.cloneNode();
+        let fret = this.createFret(i);
         this.svg.appendChild(fret);
     }
 }
 
-GuitarNeck.prototype.addInlays = function() {
+GuitarNeck.prototype.createFret = function(fretIndex) {
+    let fretX = parseInt(this.nut.getAttribute("x")) + parseInt(this.nut.getAttribute("width")) - 20;
+    let fret = document.createElementNS(this.svgNS, "line");
+    fret.setAttribute("class", "fret");
+    fret.setAttribute("id", `f${fretIndex}`);
+    fretX = fretIndex > 0 ? 50 + this.fretSpacing * fretIndex : fretX;
+    fret.setAttribute("x1", fretX);
+    fret.setAttribute("y1", "10");
+    fret.setAttribute("x2", fretX);
+    fret.setAttribute("y2", "190");
+    if (fretIndex == 0) {
+        fret.setAttribute("stroke", "black");
+        fret.setAttribute("stroke-width", "0");
+    } else {
+        fret.setAttribute("stroke", "silver");
+        fret.setAttribute("stroke-width", "5");
+    }
+
+    // add custom data attributes
+    fret.setAttribute("data-fret-index", fretIndex);
+    this.lastFret = fret.cloneNode();
+    return fret;
+}
+
+GuitarNeck.prototype.createInlays = function() {
     const inlays = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
     inlays.forEach((inlay) => {
-        let circle = document.createElementNS(this.svgNS, "circle");
-        circle.setAttribute("class", "inlay");
-        if (inlay == 12 || inlay == 24) {
-            circle.setAttribute("id", `inlay${inlay}-1`);
-        } else {
-            circle.setAttribute("id", `inlay${inlay}`);
-        }
-        circle.setAttribute("cx", 50 + (this.fretSpacing * inlay) - 30);
-        circle.setAttribute("cy", inlay == 12 || inlay == 24 ? "50" : "100");
-        circle.setAttribute("r", "5");
-        circle.setAttribute("fill", "white");
-
-        // Add custom data attributes
-        circle.setAttribute("data-fret-index", inlay);  
-        
-        this.svg.appendChild(circle);        
-        if (inlay == 12 || inlay == 24) {
-            let circle2 = circle.cloneNode();
-            circle2.setAttribute("id", `inlay${inlay}-2`);
-            circle2.setAttribute("cy", "150");
-            this.svg.appendChild(circle2);
-        }
+        let inlayGroup = this.createInlay(inlay);
+        this.svg.appendChild(inlayGroup);
     });
 }
 
-GuitarNeck.prototype.addStrings = function() {
+GuitarNeck.prototype.createInlay = function(i){
+    let inlay = document.createElementNS(this.svgNS, "g");
+    inlay.setAttribute("class", "inlay");
+    inlay.setAttribute("id", `inlay${i}`);
+    inlay.setAttribute("data-fret-index", i);
+    let inlayCircle = document.createElementNS(this.svgNS, "circle");
+    inlayCircle.setAttribute("class", "inlay");
+    if (i == 12 || i == 24) {
+        inlayCircle.setAttribute("id", `inlayCircle${i}-1`);
+    } else {
+        inlayCircle.setAttribute("id", `inlayCircle${i}`);
+    }
+    inlayCircle.setAttribute("cx", 50 + (this.fretSpacing * i) - 30);
+    inlayCircle.setAttribute("cy", i == 12 || i == 24 ? "50" : "100");
+    inlayCircle.setAttribute("r", "5");
+    inlayCircle.setAttribute("fill", "white");        
+    
+    inlay.appendChild(inlayCircle);        
+    if (i == 12 || i == 24) {
+        let inlayCircle2 = inlayCircle.cloneNode();
+        inlayCircle2.setAttribute("id", `inlay${i}-2`);
+        inlayCircle2.setAttribute("cy", "150");
+        inlay.appendChild(inlayCircle2);
+    }
+    return inlay;
+}
+
+/// <summary>
+/// Create the strings for the guitar neck based on the tuning.
+/// </summary>
+GuitarNeck.prototype.createStrings = function() {
     let stringCount = this.StringCount();  
     for (let i = 0; i < stringCount; i++) {        
-        let string = document.createElementNS(this.svgNS, "line");
-        let fbY = parseInt(this.fingerBoard.getAttribute("y"));        
-        let fbHeight = parseInt(this.fingerBoard.getAttribute("height"));
-        let stringOffset = fbHeight / stringCount;
-        let startOffset = stringOffset / 2;        
-        string.setAttribute("id", `string${i}`);
-        string.setAttribute("class", "guitar_string");
-        string.setAttribute("x1", (40 - this.string_overlap_length_behind_nut));
-        string.setAttribute("y1", (stringOffset * i) + startOffset + fbY);
-        string.setAttribute("x2", (1490 + this.string_overlap_length_behind_nut));
-        string.setAttribute("y2", (stringOffset * i) + startOffset + fbY);
-        string.setAttribute("stroke", "black");
-        string.setAttribute("stroke-width", "2");
-
-        // Add custom data attributes
-        string.setAttribute("data-string-index", i);         
-        let stringRootNote = parseInt(this.tuningMidiNumbers[i]);   
-        string.setAttribute("data-string-root-note-number", stringRootNote);
+        let string = this.createString(i);
         
-        this.svg.appendChild(string);        
+        // Add the new string before the first fingering if it exists
+        const firstFingering = this.svg.querySelector('.fingering'); 
+        if (firstFingering) {
+            this.svg.insertBefore(string, firstFingering);
+        } else {
+            this.svg.appendChild(string);
+        }        
     }
 }
 
-GuitarNeck.prototype.addFingerings = function() {
+/// <summary>
+/// Create a string for the guitar neck based on the tuning index.
+/// </summary>
+GuitarNeck.prototype.createString = function(i) {     
+    let string = document.createElementNS(this.svgNS, "line");
+    let fbY = parseInt(this.fingerBoard.getAttribute("y"));        
+    // let fbHeight = parseInt(this.fingerBoard.getAttribute("height"));    
+    let edgeMargin = this.fingerboardEdgeMargin();        
+    string.setAttribute("id", `string${i}`);
+    string.setAttribute("class", "guitar_string");
+    string.setAttribute("x1", (40 - this.string_overlap_length_behind_nut));
+    string.setAttribute("y1", (this.string_spacing * i) + edgeMargin + fbY);
+    string.setAttribute("x2", (1490 + this.string_overlap_length_behind_nut));
+    string.setAttribute("y2", (this.string_spacing * i) + edgeMargin + fbY);
+    string.setAttribute("stroke", "black");
+    string.setAttribute("stroke-width", "2");
+
+    // Add custom data attributes
+    string.setAttribute("data-string-index", i);         
+    let stringRootNote = parseInt(this.tuningMidiNumbers[i]);   
+    string.setAttribute("data-string-root-note-number", stringRootNote);
+    
+    return string;
+}
+
+GuitarNeck.prototype.createFingerings = function() {
     let stringCount = this.StringCount();
     for (let i = 0; i < stringCount; i++) {
         let string = this.svg.querySelector(`#string${i}`);
         let stringY = parseInt(string.getAttribute("y1"));
-        let rootNote = parseInt(string.getAttribute("data-string-root-note-number"));        
+        let stringRootNote = parseInt(string.getAttribute("data-string-root-note-number"));      
         for (let f = 0; f <= this.fretCount; f++) {
-            let fret = this.svg.querySelector(`#f${f}`);
-            let fretX = parseInt(fret.getAttribute("x1"));
-            let note = new Note(rootNote + f);
-            let fingering = document.createElementNS(this.svgNS, "g");
-            fingering.setAttribute("class", "fingering");
-            fingering.setAttribute("id", `fingeringS${i}F${f}`);
-            fingering.setAttribute("data-note-number", note.midiNumber);            
-            fingering.setAttribute("data-string", i);
-            fingering.setAttribute("data-fret", f);
-            fingering.setAttribute("data-note-name", note.noteName);
-            fingering.setAttribute("data-note-octave", note.octave);
-            fingering.setAttribute("data-note-spelling", note.noteSpelling);
-            fingering.setAttribute("data-note-frequency", note.frequency);
-
-            let noteCircle = document.createElementNS(this.svgNS, "circle");
-            noteCircle.setAttribute("class", "note");
-            noteCircle.setAttribute("id", `note${note.midiNumber}s${i}f${f}`);            
-            noteCircle.setAttribute("cx", fretX - 15);
-            noteCircle.setAttribute("cy", stringY);
-            noteCircle.setAttribute("r", "15"); 
-            noteCircle.setAttribute("fill", "gray");
-            
-            fingering.appendChild(noteCircle);
-                        
-            noteText = document.createElementNS(this.svgNS, "text");
-            noteText.setAttribute("x", fretX - 15);
-            noteText.setAttribute("y", stringY);
-            noteText.setAttribute("class", "note-text");
-            noteText.setAttribute("text-anchor", "middle");
-            noteText.setAttribute("dy", ".3em");                     
-            noteText.textContent = note.toString();
-            fingering.appendChild(noteText);
-            this.svg.appendChild(fingering);            
-        }
+            let fingering = this.createFingering(i, f, stringRootNote, stringY);
+            this.svg.appendChild(fingering);     
+        }        
     }
+}
+
+GuitarNeck.prototype.createFingering = function(stringIndex, fretIndex, rootNote, stringY) {
+    let fret = this.svg.querySelector(`line.fret[data-fret-index="${fretIndex}"]`);
+    let fretX = parseInt(fret.getAttribute('x1'));
+    let fingering = document.createElementNS(this.svgNS, "g");
+    let note = new Note(rootNote + fretIndex);
+    fingering.setAttribute("class", "fingering");
+    fingering.setAttribute("id", `fingeringS${stringIndex}F${fretIndex}`);
+    fingering.setAttribute("data-note-number", note.midiNumber);            
+    fingering.setAttribute("data-string", stringIndex);
+    fingering.setAttribute("data-fret", fretIndex);
+    fingering.setAttribute("data-note-name", note.noteName);
+    fingering.setAttribute("data-note-octave", note.octave);
+    fingering.setAttribute("data-note-spelling", note.noteSpelling);
+    fingering.setAttribute("data-note-frequency", note.frequency);
+
+    let noteCircle = document.createElementNS(this.svgNS, "circle");
+    noteCircle.setAttribute("class", "note");
+    noteCircle.setAttribute("id", `note${note.midiNumber}s${stringIndex}f${fretIndex}`);            
+    noteCircle.setAttribute("cx", fretX - 15);
+    noteCircle.setAttribute("cy", stringY);
+    noteCircle.setAttribute("r", "15"); 
+    noteCircle.setAttribute("fill", "gray");
+    
+    fingering.appendChild(noteCircle);
+                
+    noteText = document.createElementNS(this.svgNS, "text");
+    noteText.setAttribute("x", fretX - 15);
+    noteText.setAttribute("y", stringY);
+    noteText.setAttribute("class", "note-text");
+    noteText.setAttribute("text-anchor", "middle");
+    noteText.setAttribute("dy", ".3em");                     
+    noteText.textContent = note.toString();
+    fingering.appendChild(noteText);
+    return fingering;
 }
 
 GuitarNeck.prototype.updateFingerings = function() {
@@ -199,7 +245,7 @@ GuitarNeck.prototype.updateFingerings = function() {
 }
 
 /// <summary>
-/// Create notes for the string at the given index.
+/// Create fingerings for the string at the given index.
 /// also handles updating the notes if they already exist.
 /// This method is called when a new string is added to the neck.
 /// </summary>
@@ -208,39 +254,16 @@ GuitarNeck.prototype.createFingeringsForString = function(stringIndex) {
     let stringY = parseInt(string.getAttribute('y1'));
     let rootNote = parseInt(string.getAttribute('data-string-root-note-number'));
     for (let f = 0; f <= this.fretCount; f++) {
-        let fret = this.svg.querySelector(`line.fret[data-fret-index="${f}"]`);
-        let fretX = parseInt(fret.getAttribute('x1'));
-        
-        let noteNumber = rootNote + f;
-        let note = new Note(noteNumber);
-        let existingFingering = this.svg.querySelector(`g.fingering[data-string="${stringIndex}"][data-fret="${f}"]`);
-        let existingNoteCircle = existingFingering.querySelector(`circle`);
-        let existingNoteText = existingFingering.querySelector(`text`);
-        let existingNoteNumber = existingNoteCircle ? parseInt(existingFingering.getAttribute('data-note-number')) : null;
-        if (existingNoteNumber){            
-            if (existingNoteNumber != noteNumber) {
-                existingNoteCircle.setAttribute('data-note-number', note.midiNumber);
-                existingNoteCircle.setAttribute('data-note-name', note.noteName);
-                existingNoteCircle.setAttribute('data-note-octave', note.octave);
-                existingNoteCircle.setAttribute('data-note-frequency', note.frequency);
-                existingNoteCircle.setAttribute('data-note-spelling', note.noteSpelling);                   
-                existingNoteText.textContent = note.noteSpelling;                                
-            }
-            continue;
-        }
-        else {
-            this.addNoteForString(noteNumber, stringIndex, f, fretX, stringY);
-        }        
+        let fingering = this.createFingering(stringIndex, f, rootNote, stringY);        
+        this.svg.appendChild(fingering);     
     }
-    let fret_index = parseInt(this.lastFret.getAttribute('data-fret-index')); 
+    let fret_index = parseInt(this.lastFret.getAttribute('data-fret-index'));     
     this.handleNoteVisibilityBasedOnLastFret(fret_index);
 }
 
 
 /// <summary>
-/// Update the notes for the string at the given index.
-
-/// This method is called when a string is removed from the neck.
+/// Add a note and note-text to a fingering group.
 GuitarNeck.prototype.addNoteForString = function(noteNumber, stringIndex, fretIndex, fretX, stringY) {
     let noteCircle = document.createElementNS(this.svgNS, 'circle');
     noteCircle.setAttribute('class', 'note');
@@ -370,12 +393,10 @@ GuitarNeck.prototype.updateInlays = function() {
 /// Adjust the neck width (rectangle "Height") based on the number of strings
 /// does not currently support Bass guitar.
 /// </summary>
-GuitarNeck.prototype.resetNeckHeight = function() {
-    let fb_string_spacing = 30;
-    let fb_edge_margin = 15;
-    let stringCount = this.StringCount();
-    let fb_StringAreaHeight = stringCount * fb_string_spacing;
-    let fb_final_height = fb_StringAreaHeight + (fb_edge_margin * 2)
+GuitarNeck.prototype.resetNeckHeight = function() {    
+    let stringCount = this.StringCount();    
+    let fb_StringAreaHeight = stringCount * this.string_spacing;
+    let fb_final_height = fb_StringAreaHeight + (this.stringStartOffset * 2)
     this.fingerBoard.setAttribute('height', fb_final_height);
     this.nut.setAttribute('height', fb_final_height);    
     this.svg.setAttribute('height', fb_final_height - 20);
@@ -392,45 +413,32 @@ GuitarNeck.prototype.lastVisibleFret = function() {
     }    
 }
 
+
 GuitarNeck.prototype.addStringToNeck = function(newStringRootNote) {
+    // add the new string to the tuning array
     this.tuningMidiNumbers.push(parseInt(newStringRootNote));  
-    let fb_top = parseInt(this.fingerBoard.getAttribute('y'));
-    let fb_string_spacing = 30;
-    let fb_edge_margin = 15;
-    let stringCount = this.StringCount();
-    // watching for this change 
-    let fb_string_area_height = (stringCount - 1) * fb_string_spacing;
-    let stringY = fb_top + fb_edge_margin + fb_string_area_height;
-    let newString = document.createElementNS(this.svgNS, 'line');    
-    newString.setAttribute('id', 'string' + (stringCount - 1));
-    newString.setAttribute('class', 'guitar_string');
-    newString.setAttribute('x1', 10);    
-    newString.setAttribute('y1', stringY);
-    newString.setAttribute('x2', 1490);
-    newString.setAttribute('y2', stringY);
-    newString.setAttribute('stroke', 'black');
-    newString.setAttribute('stroke-width', 2);
-
-    newString.setAttribute("data-string-index", stringCount - 1);             
-    newString.setAttribute("data-string-root-note-number", newStringRootNote);
-    
-    const firstFingering = this.svg.querySelector('.fingering');
+    let string = this.createString(this.StringCount() - 1);
+    // Add the new string before the first fingering if it exists    
+    const firstFingering = this.svg.querySelector('.fingering'); 
     if (firstFingering) {
-        this.svg.insertBefore(newString, firstFingering);
+        this.svg.insertBefore(string, firstFingering);
     } else {
-        this.svg.appendChild(newLine);
-    }
+        this.svg.appendChild(string);
+    }        
     
-    this.updateNotes(stringCount -1);    
-
-    this.resetNeckHeight();
+    this.updateFingerings();      
+    this.resetNeckHeight();  
 }
 
+/// <summary>
+/// Remove the last string from the neck.
+/// </summary>
 GuitarNeck.prototype.removeStringFromNeck = function() {
     let guitarStrings = this.svg.querySelectorAll('line.guitar_string');    
     let stringCount = this.StringCount();
     if (stringCount > 1) {
-        let stringRootNote = guitarStrings[stringCount - 1].getAttribute('data-string-root-note-number');
+        let stringRootNote = this.svg.querySelector(`line.guitar_string#string${stringCount - 1}`)
+            .getAttribute('data-string-root-note-number');
         this.removeNotesForString(stringCount - 1);
         this.tuningMidiNumbers.pop(stringRootNote);        
         guitarStrings[stringCount - 1].remove();        
