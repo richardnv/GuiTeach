@@ -476,6 +476,7 @@ GuitarNeck.prototype.showAllNotes = function() {
             let noteText = fingering.querySelector('text.note-text');
             note.style.display = 'block';
             noteText.style.display = 'block';
+            note.style.fill = 'gray';
         }
     });    
     this._allNotesAreHidden = false;
@@ -501,4 +502,69 @@ GuitarNeck.prototype.GetFingeringInfo = function(stringIndex, fretIndex) {
         noteFrequency: noteFrequency,
         noteSpelling: noteSpelling
     };
+}
+
+GuitarNeck.prototype.ShowScale = function(scaleRootNote = "C", scaleType = "Major") {
+    let scaleNotes = this.GetScaleNotes(scaleRootNote, scaleType);
+    console.log(scaleNotes);
+    let noteCount = scaleNotes.length;
+    this.hideAllNotes();
+    for (let i = 0; i < noteCount; i++) {
+        let note = scaleNotes[i];        
+        console.log(`Showing ${note} notes`);
+        for (let j = 0; j < this.StringCount(); j++) {
+            let fingerings = this.svg.querySelectorAll(`g.fingering[data-note-name="${note}"][data-string="${j}"]`);
+            fingerings.forEach(curFingering => {
+                let curNote = curFingering.querySelector('circle.note');
+                let curNoteText = curFingering.querySelector('text.note-text');
+                curNote.style.display = 'block';
+                curNoteText.style.display = 'block';
+                if (note == scaleRootNote) {
+                    curNote.style.fill = 'blue';
+                } else {
+                    curNote.style.fill = 'gray';
+                }   
+            });            
+        }        
+        this._allNotesAreHidden = false;
+    }
+}
+
+GuitarNeck.prototype.GetScaleNotes = function(scaleRootNote, scaleType) {
+    console.log(`Getting ${scaleType} scale notes for ${scaleRootNote}`);
+    let scaleNotes = [];
+    let notes = "C C# D D# E F F# G G# A A# B".split(" ");    
+    let scalePattern = [];
+    if (scaleType == "Major") {
+        scalePattern = [2, 2, 1, 2, 2, 2, 1];                
+    }
+    if (scaleType == "Minor") {
+        scalePattern = [2, 1, 2, 2, 1, 2, 2];
+    }    
+    if (scaleType == "Pentatonic") {
+        scalePattern = [3, 2, 2, 3, 2];
+    }
+    if (scaleType == "Blues") {
+        scalePattern = [3, 2, 1, 1, 3, 2];
+    }
+    if (scaleType == "Harmonic Minor") {
+        scalePattern = [2, 1, 2, 2, 1, 3, 1];
+    }
+    if (scaleType == "Melodic Minor") {
+        scalePattern = [2, 1, 2, 2, 2, 2, 1];
+    }
+
+    scaleNotes.push(scaleRootNote);
+    let noteIndex = notes.indexOf(scaleRootNote);    
+    console.log(`Scale Pattern: ${scalePattern}`);
+    for (let i = 0; i < scalePattern.length; i++) {
+        noteIndex = noteIndex + scalePattern[i];
+        if (noteIndex > 11) {
+            noteIndex = noteIndex - 12;
+        }
+        let nextNote = notes[noteIndex];
+        scaleNotes.push(nextNote);
+    }
+    
+    return scaleNotes;
 }
