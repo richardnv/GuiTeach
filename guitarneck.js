@@ -117,14 +117,14 @@ GuitarNeck.prototype.createInlays = function() {
 GuitarNeck.prototype.createInlay = function(i){
     let inlay = document.createElementNS(this.svgNS, "g");
     inlay.setAttribute("class", "inlay");
-    inlay.setAttribute("id", `inlay${i}`);
+    inlay.setAttribute("id", `inlayGroup${i}`);
     inlay.setAttribute("data-fret-index", i);
     let inlayCircle = document.createElementNS(this.svgNS, "circle");
     inlayCircle.setAttribute("class", "inlay");
     if (i == 12 || i == 24) {
-        inlayCircle.setAttribute("id", `inlayCircle${i}-1`);
+        inlayCircle.setAttribute("id", `inlay${i}-1`);
     } else {
-        inlayCircle.setAttribute("id", `inlayCircle${i}`);
+        inlayCircle.setAttribute("id", `inlay${i}`);
     }
     inlayCircle.setAttribute("cx", 50 + (this.fretSpacing * i) - 30);
     inlayCircle.setAttribute("cy", i == 12 || i == 24 ? "50" : "100");
