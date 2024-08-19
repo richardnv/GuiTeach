@@ -395,13 +395,13 @@ GuitarNeck.prototype.updateInlays = function() {
 /// </summary>
 GuitarNeck.prototype.resetNeckHeight = function() {    
     let stringCount = this.StringCount();    
-    let fb_StringAreaHeight = stringCount * this.string_spacing;
-    let fb_final_height = fb_StringAreaHeight + (this.stringStartOffset * 2)
+    let fb_stringAreaHeight = stringCount * this.string_spacing;
+    let fb_final_height = fb_stringAreaHeight + (this.fingerboardEdgeMargin() * 2)
     this.fingerBoard.setAttribute('height', fb_final_height);
-    this.nut.setAttribute('height', fb_final_height);    
-    this.svg.setAttribute('height', fb_final_height - 20);
-    this.updateFrets();
-    this.updateInlays();
+    this.nut.setAttribute('height', fb_final_height);    // resize the nut
+    this.svg.setAttribute('height', fb_final_height - 20); // resize the svg
+    this.updateFrets(); // resize the frets
+    this.updateInlays(); // center the inlays vertically on the neck    
 }
 
 GuitarNeck.prototype.lastVisibleFret = function() {
@@ -413,12 +413,21 @@ GuitarNeck.prototype.lastVisibleFret = function() {
     }    
 }
 
-
+// strings are added to the end of the tuning array.
 GuitarNeck.prototype.addStringToNeck = function(newStringRootNote) {
     // add the new string to the tuning array
-    this.tuningMidiNumbers.push(parseInt(newStringRootNote));  
+    this.tuningMidiNumbers.push(parseInt(newStringRootNote));      
+    // If the StringCount was 6 prior to adding a value to the tuning array, 
+    // the index of the last string, at that time, would have been 5. 
+    // The string count in bound to the tuning array. So if string count was 6 before,
+    // it will now be 7, and the index of the last string will be 6.
+    // the createString method receives the INDEX of the string being added. 
+    // Allowing it to associate with the correct tuning array item.
     let string = this.createString(this.StringCount() - 1);
-    // Add the new string before the first fingering if it exists    
+
+    // visually, a string must be defined in the svg before any element that it should appear under.
+    // Add the new string before the first fingering if it exists. Otherwise the string line will 
+    // appear above the fingering and notes.    
     const firstFingering = this.svg.querySelector('.fingering'); 
     if (firstFingering) {
         this.svg.insertBefore(string, firstFingering);
