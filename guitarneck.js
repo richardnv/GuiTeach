@@ -506,25 +506,33 @@ GuitarNeck.prototype.GetFingeringInfo = function(stringIndex, fretIndex) {
 
 GuitarNeck.prototype.ShowScale = function(scaleRootNote = "C", scaleType = "Major") {
     let scaleNotes = this.GetScaleNotes(scaleRootNote, scaleType);
-    console.log(scaleNotes);
+    
     let noteCount = scaleNotes.length;
     this.hideAllNotes();
     for (let i = 0; i < noteCount; i++) {
         let note = scaleNotes[i];        
         console.log(`Showing ${note} notes`);
         for (let j = 0; j < this.StringCount(); j++) {
-            let fingerings = this.svg.querySelectorAll(`g.fingering[data-note-name="${note}"][data-string="${j}"]`);
-            fingerings.forEach(curFingering => {
-                let curNote = curFingering.querySelector('circle.note');
-                let curNoteText = curFingering.querySelector('text.note-text');
-                curNote.style.display = 'block';
-                curNoteText.style.display = 'block';
-                if (note == scaleRootNote) {
-                    curNote.style.fill = 'blue';
-                } else {
-                    curNote.style.fill = 'gray';
-                }   
-            });            
+            let lastFretIndex = 0;
+            if (this.lastFret) {
+                lastFretIndex = parseInt(this.lastFret.getAttribute('data-fret-index'));
+            } else {
+                lastFretIndex = this.fretCount;
+            }
+            for (let f = 0; f <= lastFretIndex; f++) {
+                let fingerings = this.svg.querySelectorAll(`g.fingering[data-note-name="${note}"][data-string="${j}"][data-fret="${f}"]`);
+                fingerings.forEach(curFingering => {
+                    let curNote = curFingering.querySelector('circle.note');
+                    let curNoteText = curFingering.querySelector('text.note-text');
+                    curNote.style.display = 'block';
+                    curNoteText.style.display = 'block';
+                    if (note == scaleRootNote) {
+                        curNote.style.fill = 'blue';
+                    } else {
+                        curNote.style.fill = 'gray';
+                    }   
+                });            
+            }
         }        
         this._allNotesAreHidden = false;
     }
