@@ -17,6 +17,12 @@
 		<h1>Guitar Neck</h1>
 	</header>
     <main>
+        <label for="displayLayout">Layout:</label>
+        <select id="displayLayout" name="displayLayout">
+            <option value="1">Lefty Instructor</option>
+            <option value="2">Guitar Tab-ish</option>
+            <option value="3">Righty Instructor</option>  
+        </select>          
         <div id="guitar_neck_container">
 
         </div>    
@@ -26,8 +32,29 @@
         </div>
         <button id="addStringToNeckBtn">Add a String</button>
         <dialog id="addStringDialog">
+            <h4>Add a String</h4>
+            <p>Select the note and octave and we will show you a preview of where it will be placed.</p>
+            <svg id="stringPreviewSVG" width="100" height="100">
+                <rect x="10" y="0" width="90" height="100" stroke="black" stroke-width="2" fill="white"></rect>
+                
+                <line x1="2" y1="10" x2="100" y2="10" stroke="black" stroke-width="2"></line>
+                <line x1="2" y1="26" x2="100" y2="26" stroke="black" stroke-width="2"></line>
+                <line x1="2" y1="42" x2="100" y2="42" stroke="black" stroke-width="2"></line>
+                <line x1="2" y1="58" x2="100" y2="58" stroke="black" stroke-width="2"></line>
+                <line x1="2" y1="74" x2="100" y2="74" stroke="black" stroke-width="2"></line>
+                <line x1="2" y1="90" x2="100" y2="90" stroke="black" stroke-width="2"></line>   
+                
+                <polygon points="0,0 10,5 0,10" fill="red"></polygon>
+                <line x1="10" y1="5" x2="100" y2="5" stroke="red" stroke-width="1.5"></line>
+                <polygon points="0,14 10,18 0,22" fill="red"></polygon>
+                <polygon points="0,30 10,34 0,38" fill="red"></polygon>
+                <polygon points="0,46 10,50 0,54" fill="red"></polygon>
+                <polygon points="0,62 10,66 0,70" fill="red"></polygon>
+                <polygon points="0,78 10,82 0,86" fill="red"></polygon>
+                <polygon points="0,91 10,95 0,99" fill="red"></polygon>
+            </svg>
             <form id="addAStringTuning" method="dialog">
-                <p>Select the root note and octave of the string being added.</p>
+                <label for="stringRootNote">String Root Note:</label>             
                 <select id="stringRootNote" name="stringRootNote">
                     <option value="0">C</option>
                     <option value="1">C#</option>
@@ -54,6 +81,7 @@
                     <option value="8">7</option>
                 </select>                
                 <button id="addStringBtn">Add String</button>
+                <button id="cancelAddStringBtn">Cancel</button>
             </form>
         </dialog>
         <button id="removeStringFromNeckBtn"onclick="guitarNeckInstance.removeStringFromNeck()">Remove a String</button>
@@ -123,12 +151,17 @@
     }
 
     addStringToNeckBtn.addEventListener('click', () => {
-        let dialog = document.getElementById('addStringDialog');
+        let dialog = document.getElementById('addStringDialog');        
         dialog.showModal();
     });
 
+    cancelAddStringBtn.addEventListener('click', () => {
+        let dialog = document.getElementById('addStringDialog');
+        dialog.close();
+    });
+
     addStringBtn.addEventListener('click', () => {
-        let dialog = document.getElementById('addStringDialog');        
+        let dialog = document.getElementById('addStringDialog');                
         let selectedStringRootNote = document.getElementById('stringRootNote').value;
         let selectedStringRootOctave = document.getElementById('stringRootOctave').value;
         let newStringRootNoteNumber = parseInt(selectedStringRootNote) + (12 * parseInt(selectedStringRootOctave));

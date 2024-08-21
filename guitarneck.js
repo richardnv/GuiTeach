@@ -576,3 +576,48 @@ GuitarNeck.prototype.GetScaleNotes = function(scaleRootNote, scaleType) {
     
     return scaleNotes;
 }
+
+
+GuitarNeck.prototype.renderStringPreview = function() {
+    let stringPreview = document.createElementNS(this.svgNS, "svg");
+    stringPreview.setAttribute("id", "stringPreview");
+    stringPreview.setAttribute("width", "100");
+    stringPreview.setAttribute("height", "100");    
+}
+
+GuitarNeck.prototype.NewStringLocationPreview = function(proposedStringRootNote) {
+    const proposedRootNote = parseInt(proposedStringRootNote);    
+    let tuningArray = this.tuningMidiNumbers();
+    let stringCount = this.StringCount();    
+    let targetPosition = null;
+
+    if (proposedStringRootNote < tuningArray[0]) {
+        targetPosition = 0; // index of the first string
+    } 
+
+    // we need to find the existing string that the new string will be inserted before
+    if (!targetPosition){        // if the target position has not been set
+        for (let i = 1; i < stringCount; i++) {     // start at the second string 
+            let currentStringRootNote = tuningArray[i];
+            if (proposedRootNote < currentStringRootNote) {
+                // The new string will be inserted before the current string
+                targetPosition = i;
+                break;
+            } else if (proposedRootNote == currentStringRootNote) {
+                // return a message indicating that the string already exists
+                targetPosition = -1;
+                break;
+            }            
+        }
+        if (!targetPosition) {
+            targetPosition = stringCount; // the new string will be added to the end of the tuning array
+        }
+    }           
+    
+    // draw the representations.
+    if (targetPosition >= 0) {
+        let proposedString = this.createProposedString(targetPosition);
+        
+    }
+}
+
