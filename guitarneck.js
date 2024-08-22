@@ -7,6 +7,15 @@
  * @param {number[]} _tuningMidiNumbers - The MIDI numbers representing the tuning of the guitar strings.
  */
 
+// Define the enum
+const GuitarNeckLayout = Object.freeze({
+    LEFTY_INSTRUCTOR: 0,
+    GUITAR_TABISH: 1,
+    RIGHTY_INSTRUCTOR: 2,    
+});
+
+
+
 function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.svgNS = "http://www.w3.org/2000/svg";
     this.svg_right_margin = 50;
@@ -26,7 +35,7 @@ function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.fretSpacing = 59;
     this.string_spacing = 30;
     this.fingerboardEdgeMargin = 15;
-    this.layout = 1; 
+    this.layout = GuitarNeckLayout.LEFTY_INSTRUCTOR;    
 }
 
 /// Handles the initial render of the fingerboard and its components, using the defaults values.
@@ -157,6 +166,10 @@ GuitarNeck.prototype.createStrings = function() {
             this.svg.appendChild(string);
         }        
     }
+}
+
+GuitarNeck.prototype.layoutTransform = function() {
+
 }
 
 /// <summary>
@@ -579,10 +592,61 @@ GuitarNeck.prototype.GetScaleNotes = function(scaleRootNote, scaleType) {
 
 
 GuitarNeck.prototype.renderStringPreview = function() {
-    let stringPreview = document.createElementNS(this.svgNS, "svg");
-    stringPreview.setAttribute("id", "stringPreview");
-    stringPreview.setAttribute("width", "100");
-    stringPreview.setAttribute("height", "100");    
+
+    let pv_fb_margin = 10;
+    let pv_string_spacing = 16;
+    let stringCount = this.StringCount();
+    let pv_SVG_height = stringCount * pv_string_spacing + (pv_fb_margin * 2); // 6  = 6 * 16 + 10 * 2 = 96 + 20 = 116
+
+
+    let stringPreviewSVG = document.createElementNS(this.svgNS, "svg");
+    stringPreviewSVG.setAttribute("id", "stringPreviewSVG");
+    stringPreviewSVG.setAttribute("x", "0");
+    stringPreviewSVG.setAttribute("y", "0");
+    stringPreviewSVG.setAttribute("width", "100");
+    stringPreviewSVG.setAttribute("height", (pv_SVG_height).toString());    
+    let stringPreviewNeck = document.createElementNS(this.svgNS, "rect");
+    stringPreviewNeck.setAttribute("x", "10");
+    stringPreviewNeck.setAttribute("y", "0");
+    stringPreviewNeck.setAttribute("width", "90");
+    stringPreviewNeck.setAttribute("height", (pv_SVG_height).toString());
+    stringPreviewNeck.setAttribute("stroke", "black");
+    stringPreviewNeck.setAttribute("stroke-width", "2");
+    stringPreviewNeck.setAttribute("fill", "white");
+    stringPreviewSVG.appendChild(stringPreviewNeck);
+    let firstStringY = pv_fb_margin;
+    for (let i = 0; i < this.StringCount(); i++) {
+        let existingString = document.createElementNS(this.svgNS, "line");
+        existingString.setAttribute("x1", "2");
+        let thisStringY = firstStringY + (pv_string_spacing * i);        
+        existingString.setAttribute("y1", (thisStringY).toString());
+        existingString.setAttribute("x2", "100");
+        existingString.setAttribute("y2", (thisStringY).toString());
+        existingString.setAttribute("stroke", "black");
+        existingString.setAttribute("stroke-width", "2");        
+        stringPreviewSVG.appendChild(existingString);
+    }
+    let previewStringPointer = document.createElementNS(this.svgNS, "polygon");
+    previewStringPointer.setAttribute("id", "previewStringPointer");
+    let pointerCenterRef = firstStringY + (pv_string_spacing * stringCount);
+    let pX1 = "0";
+    let pY1 = (pointerCenterRef - 5).toString();
+    let pX2 = "10";
+    let pY2 = (pointerCenterRef).toString();
+    let pY3 = (pointerCenterRef + 5).toString();
+    previewStringPointer.setAttribute("points", `${pX1},${pY1} ${pX2},${pY2} ${pX1},${pY3}`);
+    previewStringPointer.setAttribute("fill", "red");
+    stringPreviewSVG.appendChild(previewStringPointer);
+    let previewStringLine = document.createElementNS(this.svgNS, "line");        
+    previewStringLine.setAttribute("id","previewStringLine");
+    previewStringLine.setAttribute("x1","10");
+    previewStringLine.setAttribute("x2","100");
+    previewStringLine.setAttribute("y1",(pointerCenterRef).toString()); 
+    previewStringLine.setAttribute("y2",(pointerCenterRef).toString()); 
+    previewStringLine.setAttribute("stroke","red");
+    previewStringLine.setAttribute("stroke-width","1.5");
+    stringPreviewSVG.appendChild(previewStringLine);    
+    return stringPreviewSVG;
 }
 
 GuitarNeck.prototype.NewStringLocationPreview = function(proposedStringRootNote) {
