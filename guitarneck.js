@@ -25,10 +25,8 @@ function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.minHeight = 80;
     this.fretSpacing = 59;
     this.string_spacing = 30;
-}
-
-GuitarNeck.prototype.fingerboardEdgeMargin = function() {
-    return this.string_spacing / 2;
+    this.fingerboardEdgeMargin = 15;
+    this.layout = 1; 
 }
 
 /// Handles the initial render of the fingerboard and its components, using the defaults values.
@@ -49,8 +47,7 @@ GuitarNeck.prototype.render = function() {
     this.fingerBoard.setAttribute("y", 10);
     this.fingerBoard.setAttribute("width", window.innerWidth);
     let stringCount = this.StringCount();
-    let fingerboardEdgeMargin = this.fingerboardEdgeMargin();
-    this.fingerBoard.setAttribute("height", (this.string_spacing * (stringCount - 1)) + (fingerboardEdgeMargin * 2));
+    this.fingerBoard.setAttribute("height", (this.string_spacing * (stringCount - 1)) + (this.fingerboardEdgeMargin * 2));
     this.fingerBoard.setAttribute("fill", "saddlebrown");    
     this.svg.appendChild(this.fingerBoard);
 
@@ -146,7 +143,10 @@ GuitarNeck.prototype.createInlay = function(i){
 /// </summary>
 GuitarNeck.prototype.createStrings = function() {
     let stringCount = this.StringCount();  
+    let currentLayout = this.layout;
+
     for (let i = 0; i < stringCount; i++) {        
+        
         let string = this.createString(i);
         
         // Add the new string before the first fingering if it exists
@@ -166,7 +166,7 @@ GuitarNeck.prototype.createString = function(i) {
     let string = document.createElementNS(this.svgNS, "line");
     let fbY = parseInt(this.fingerBoard.getAttribute("y"));        
     // let fbHeight = parseInt(this.fingerBoard.getAttribute("height"));    
-    let edgeMargin = this.fingerboardEdgeMargin();        
+    let edgeMargin = this.fingerboardEdgeMargin;        
     string.setAttribute("id", `string${i}`);
     string.setAttribute("class", "guitar_string");
     string.setAttribute("x1", (40 - this.string_overlap_length_behind_nut));
@@ -396,7 +396,7 @@ GuitarNeck.prototype.updateInlays = function() {
 GuitarNeck.prototype.resetNeckHeight = function() {    
     let stringCount = this.StringCount();    
     let fb_stringAreaHeight = stringCount * this.string_spacing;
-    let fb_final_height = fb_stringAreaHeight + (this.fingerboardEdgeMargin() * 2)
+    let fb_final_height = fb_stringAreaHeight + (this.fingerboardEdgeMargin * 2)
     this.fingerBoard.setAttribute('height', fb_final_height);
     this.nut.setAttribute('height', fb_final_height);    // resize the nut
     this.svg.setAttribute('height', fb_final_height - 20); // resize the svg
