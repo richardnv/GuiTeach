@@ -38,13 +38,37 @@ function GuitarNeck(fretCount, _tuningMidiNumbers) {
     this.layout = GuitarNeckLayout.LEFTY_INSTRUCTOR;    
 }
 
+// function svg_center_point(svg) {
+//     let x = svg.getAttribute('width') / 2;
+//     let y = svg.getAttribute('height') / 2;
+//     return { x: x, y: y };
+// }
+
+// function ideal_viewBox_point(svg) {
+//     let screen_center = svg_center_point(svg);
+//     let view_box = svg.getAttribute('viewBox').split(" ");
+//     let view_box_x = 200
+//     let view_box_y = parseFloat(view_box[1]);
+
+//     let x = svg.getAttribute('width') / 2;
+//     let y = svg.getAttribute('height') / 2;
+//     return { x: x, y: y };    
+// }
+
 /// Handles the initial render of the fingerboard and its components, using the defaults values.
 /// @returns {SVGElement} The SVG element representing the guitar neck.
-GuitarNeck.prototype.render = function() {
-    this.svg = document.createElementNS(this.svgNS, "svg");
-    this.svg.setAttribute("id", "neckSvg");
-    this.svg.setAttribute("width", window.innerWidth);
-    this.svg.setAttribute("height", this.defaultOverallHeight);
+GuitarNeck.prototype.render = function() {    
+    this.svg = document.createElementNS(this.svgNS, "svg");  
+    let svgW = window.innerWidth;
+    let svgVbW = window.innerWidth - 50;    
+    let svgH = window.innerHeight - 300;
+    let vbY = (((svgH - 200) / 2) * -1);
+    this.svg.setAttribute("id", "neckSvg");        
+    this.svg.setAttribute("width", svgW);
+    this.svg.setAttribute("height", svgH);
+    let vbVals = "0 " + vbY + " " + svgVbW + " " + svgH;
+    // let vbVals = "0 0 691 200";
+    this.svg.setAttribute("viewBox", vbVals);
 
     // The fingerBoards vertical size is based on the number of strings
     // and the horizontal size is based initially on width of the page 
@@ -685,3 +709,16 @@ GuitarNeck.prototype.NewStringLocationPreview = function(proposedStringRootNote)
     }
 }
 
+GuitarNeck.prototype.zoomNeck = function(zoomValue) {
+    let view_box = this.svg.getAttribute('viewBox').split(" ");
+    let svgHeight = parseInt(this.svg.getAttribute('height'));
+    let svgWidth = parseInt(this.svg.getAttribute('width'));
+    let neckHeight = parseInt(this.fingerBoard.getAttribute('height'));
+    
+    let min_vb_Y = (((svgHeight - neckHeight) / 2) * -1);
+    let max_vb_Y = 0;
+
+    let new_vb_Y = min_vb_Y * (zoomValue / 100);
+    
+    view_box[1] = new_vb_Y.toString();
+}

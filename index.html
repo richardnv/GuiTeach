@@ -26,8 +26,10 @@
         <div id="guitar_neck_container">
 
         </div>    
+        <label for="zoom_slider">Zoom:</label>
+        <input type="range" id="zoom_slider" min="1" max="100" value="1" step="1">
         <div id="note_display">
-            <h4>Note under cursor:</h4>
+            <h4 id="wiw"></h4>                        
             <p id="note_info"></p>
         </div>
         <button id="addStringToNeckBtn">Add a String</button>
@@ -120,9 +122,22 @@
                 noteInfo.innerText = noteInfoText;
             });
         });
+        let wiw = document.getElementById("wiw");        
+        let svginfo = document.getElementById("neckSvg");        
+        wiw.innerText = "WindowWidth: " + window.innerWidth + 
+            " WindowHeight: " + window.innerHeight +
+            " SVGWidth: " + svginfo.width.baseVal.value +
+            " SVGHeight: " + svginfo.height.baseVal.value +
+            " SVGViewBox: width " + svginfo.viewBox.baseVal.width + 
+            " SVGViewBox: height " + svginfo.viewBox.baseVal.height;
+        
     }   
     
     window.onresize = function() {
+       /* let wiw = document.getElementById("wiw");
+        let wih = document.getElementById("wih");
+        wiw.innerText = "Window Inner Width: " + window.innerWidth;
+        wih.innerText = "Window Inner Height: " + window.innerHeight; */
         guitarNeckInstance.adjustNeckWidth();             
     }
 
@@ -176,6 +191,12 @@
         guitarNeckInstance.addStringToNeck(newStringRootNoteNumber);
         dialog.close();
     });
+
+    zoom_slider.addEventListener('change', () => {
+        let zoomValue = document.getElementById('zoom_slider').value;
+        console.log(zoomValue);
+        guitarNeckInstance.zoomNeck(zoomValue);
+    });    
 
     stringRootNote.addEventListener('change', () => {
         let stringRootNote = document.getElementById('stringRootNote').value;
