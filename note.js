@@ -1,28 +1,29 @@
-function Note(midiNumber) {
+export default class Note {
+  constructor(midiNumber) {
     this.midiNumber = midiNumber;
     this.noteName = this.getNoteName();
     this.octave = this.getOctave();
     this.frequency = this.getFrequency();
-  }
+  }    
   
-  Note.prototype.toString = function() {
+  toString = () => {
     return this.noteName + this.octave;
   };
-  
-  Note.prototype.getNoteName = function() {
+
+  getNoteName = () => {
     const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     return noteNames[this.midiNumber % 12];
   };
   
-  Note.prototype.getOctave = function() {
+  getOctave = () => {
     return Math.floor(this.midiNumber / 12) - 1;
   };
   
-  Note.prototype.getFrequency = function() {
+  getFrequency = () => {
     return 440 * Math.pow(2, (this.midiNumber - 69) / 12);
   };
   
-  Note.prototype.getNoteDetails = function() {
+  getNoteDetails = () => {
     return {
       noteName: this.noteName,
       octave: this.octave,
@@ -30,4 +31,4 @@ function Note(midiNumber) {
       spelling: this.toString()
     };
   };
-  
+}
