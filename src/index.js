@@ -1,7 +1,7 @@
 const GuitarNeck = require('./guitarneck.js');
+const guitarNeckInstance = new GuitarNeck();
 
 window.onload = function() {
-    const guitarNeckInstance = new GuitarNeck();
     console.log(guitarNeckInstance);
 
     let svgCont = document.getElementById("guitar_neck_container");
@@ -21,7 +21,25 @@ window.onload = function() {
     document.getElementById("showScaleBtn").onclick = function() {
         showScale();
     };
+
+    document.getElementById("toggleAllNotesBtn").onclick = function() {
+        toggleAllNotes();
+    };
 };
+
+window.onresize = function() {
+     guitarNeckInstance.adjustNeckWidth();             
+}
+
+function toggleAllNotes() {
+    if (guitarNeckInstance.AllNotesAreHidden()) {
+        guitarNeckInstance.showAllNotes();            
+        document.getElementById('toggleAllNotesBtn').innerText = 'Hide all Notes';
+        return;
+    }
+    guitarNeckInstance.hideAllNotes();
+    document.getElementById('toggleAllNotesBtn').innerText = 'Show all Notes';
+}
 
 function showScale() {
     // Your showScale function implementation

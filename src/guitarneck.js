@@ -85,6 +85,16 @@ class GuitarNeck {
         this.fingerBoard = new FingerBoard(this.svgNS).render();
         this.svg.appendChild(this.fingerBoard);
 
+        this.fbInfo = document.createElementNS(this.svgNS, "text");
+        this.fbInfo.setAttribute("id", "fbInfo");
+        this.fbInfo.setAttribute("x", "20");
+        this.fbInfo.setAttribute("y", "200");
+        this.fbInfo.setAttribute("class", "fb-info-text");
+        this.fbInfo.setAttribute("text-anchor", "left");
+        this.fbInfo.setAttribute("dy", ".5em");                     
+        this.fbInfo.textContent = "Finger Board Info: Width: 1500 Height: 180";
+        this.svg.appendChild(this.fbInfo);
+
         this.nut = document.createElementNS(this.svgNS, "rect");
         this.nut.setAttribute("id", "nut");
         this.nut.setAttribute("class", "nut");

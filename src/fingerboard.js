@@ -5,7 +5,7 @@ class FingerBoard {
         this.nut = null;    
         this.fretCount = 24;
         this.lastVisibleFret = 24;
-        this.frets = null;        
+        this.frets = null;                
     }
     
     render = () => {
@@ -15,7 +15,7 @@ class FingerBoard {
         this.fingerBoard.setAttribute("y", "10");
         this.fingerBoard.setAttribute("width", "1500");
         this.fingerBoard.setAttribute("height", "180");
-        this.fingerBoard.setAttribute("fill", "saddlebrown");
+        this.fingerBoard.setAttribute("fill", "saddlebrown");                  
         return this.fingerBoard;        
     }    
 }
