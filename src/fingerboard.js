@@ -1,4 +1,4 @@
-export default class FingerBoard {
+class FingerBoard {
     constructor(svgNS) {
         this.svgNS = svgNS;
         this.fingerBoard = null;
@@ -8,7 +8,7 @@ export default class FingerBoard {
         this.frets = null;        
     }
     
-    create = () => {
+    render = () => {
         this.fingerBoard = document.createElementNS(this.svgNS, "rect");
         this.fingerBoard.setAttribute("id", "fingerBoard");
         this.fingerBoard.setAttribute("x", "20");
@@ -19,3 +19,5 @@ export default class FingerBoard {
         return this.fingerBoard;        
     }    
 }
+
+module.exports = FingerBoard;

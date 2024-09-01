@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
+  // Serve the index.html file
   if (req.url === '/') {
-    fs.readFile(path.join(__dirname, 'index.html'), (err, content) => {
+    fs.readFile(path.join(__dirname, './public/index.html'), (err, content) => {
       if (err) {
         res.writeHead(500);
         res.end('Error loading index.html');
@@ -13,29 +14,51 @@ const server = http.createServer((req, res) => {
         res.end(content, 'utf-8');
       }
     });
-  } else if (req.url === '/note.js') {
-    fs.readFile(path.join(__dirname, 'note.js'), (err, content) => {
+  } 
+  // Serve the bundled JavaScript file
+  else if (req.url === '/bundle.js') {
+    fs.readFile(path.join(__dirname, './public/bundle.js'), (err, content) => {
       if (err) {
         res.writeHead(500);
-        res.end('Error loading note.js');
+        res.end('Error loading bundle.js');
       } else {
         res.writeHead(200, { 'Content-Type': 'application/javascript' });
         res.end(content, 'utf-8');
       }
     });
-  } else if (req.url === '/guitarneck.js') {
-    fs.readFile(path.join(__dirname, 'guitarneck.js'), (err, content) => {
+  } 
+  // Serve other static files (e.g., CSS, images)
+  else {
+    const filePath = path.join(__dirname, 'public', req.url);
+    fs.readFile(filePath, (err, content) => {
       if (err) {
-        res.writeHead(500);
-        res.end('Error loading guitarneck.js');
+        res.writeHead(404);
+        res.end('File not found');
       } else {
-        res.writeHead(200, { 'Content-Type': 'application/javascript' });
+        const ext = path.extname(filePath);
+        let contentType = 'text/plain';
+        switch (ext) {
+          case '.js':
+            contentType = 'application/javascript';
+            break;
+          case '.css':
+            contentType = 'text/css';
+            break;
+          case '.html':
+            contentType = 'text/html';
+            break;
+          case '.png':
+            contentType = 'image/png';
+            break;
+          case '.jpg':
+            contentType = 'image/jpeg';
+            break;
+          // Add more content types as needed
+        }
+        res.writeHead(200, { 'Content-Type': contentType });
         res.end(content, 'utf-8');
       }
     });
-  } else {
-    res.writeHead(404);
-    res.end('Not Found');
   }
 });
 

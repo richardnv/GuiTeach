@@ -1,4 +1,4 @@
-export default class Note {
+class Note {
   constructor(midiNumber) {
     this.midiNumber = midiNumber;
     this.noteName = this.getNoteName();
@@ -32,3 +32,6 @@ export default class Note {
     };
   };
 }
+
+// Export for Node.js
+module.exports = Note;
