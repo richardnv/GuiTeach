@@ -368,7 +368,7 @@ class GuitarNeck {
                     note.style.display = 'none';    
                     noteText.style.display = 'none';        
                 } else if (fingering_fret_index <= fret_index) {
-                    if (note.style.display = 'none') {
+                    if (note.style.display == 'none') {
                         note.style.display = 'block';
                         noteText.style.display = 'block';
                     }
@@ -384,7 +384,7 @@ class GuitarNeck {
             if (_fret_index > fret_index) {
                 fret.style.display = 'none';
             } else if (_fret_index <= fret_index) {
-                if (fret.style.display = 'none') {
+                if (fret.style.display == 'none') {
                     fret.style.display = 'block';
                 }
             }
@@ -398,7 +398,7 @@ class GuitarNeck {
             if (inlay_fret_index > fret_index) {
                 inlay.style.display = 'none';
             } else if (inlay_fret_index <= fret_index) {
-                if (inlay.style.display = 'none') {
+                if (inlay.style.display == 'none') {
                     inlay.style.display = 'block';
                 }
             }   
