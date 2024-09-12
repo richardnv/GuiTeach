@@ -17,15 +17,15 @@
     <main>
         <label for="displayLayout">Layout:</label>
         <select id="displayLayout" name="displayLayout">
-            <option value="1">Lefty Instructor</option>
-            <option value="2">Guitar Tab-ish</option>
-            <option value="3">Righty Instructor</option>  
+            <option value="Lefty_Instructor">Lefty Instructor</option>
+            <option selected value="Guitar_Tabish">Guitar Tab-ish</option>
+            <option value="Righty_Instructor">Righty Instructor</option>  
         </select>          
         <div id="guitar_neck_container">
 
         </div>    
         <label for="zoom_slider">Zoom:</label>
-        <input type="range" id="zoom_slider" min="1" max="100" value="1" step="1">
+        <input type="range" id="zoom_slider" min="1" max="100" value="1" step="1"/>
         <div id="note_display">
             <h4 id="wiw"></h4>                        
             <p id="note_info"></p>
@@ -97,53 +97,12 @@
             <option value="Harmonic Minor">Harmonic Minor</option>
             <option value="Melodic Minor">Melodic Minor</option>            
         </select>
-        <button id="showScaleBtn" onclick="showScale()">Show Scale</button>
+        <button id="showScaleBtn">Show Scale</button>
     </main>   
     <script src="bundle.js"></script> 
 </body>
+
 <!-- <script>
-    const guitarNeckInstance = new GuitarNeck();
-
-    window.onload = function() {
-        let svgCont = document.getElementById("guitar_neck_container");
-        svgCont.appendChild(guitarNeckInstance.render());             
-        guitarNeckInstance.adjustNeckWidth();
-        let fingerings = document.querySelectorAll('.fingering');
-        fingerings.forEach(fingering => {
-            fingering.addEventListener('click', (event) => {
-                let noteInfo = document.getElementById('note_info');
-                let noteInfoText = "String: ";
-                noteInfoText += event.target.getAttribute('data-string') + ", Fret: ";                
-                noteInfoText += event.target.getAttribute('data-fret') + ", Note Name: ";
-                noteInfoText += event.target.getAttribute('data-note-name') + ", Note Number: ";            
-                noteInfoText += event.target.getAttribute('data-note-number') + ", Note Spelling: ";
-                noteInfoText += event.target.getAttribute('data-note-spelling');
-                noteInfo.innerText = noteInfoText;
-            });
-        });
-        let wiw = document.getElementById("wiw");        
-        let svginfo = document.getElementById("neckSvg");        
-        wiw.innerText = "WindowWidth: " + window.innerWidth + 
-            " WindowHeight: " + window.innerHeight +
-            " SVGWidth: " + svginfo.width.baseVal.value +
-            " SVGHeight: " + svginfo.height.baseVal.value +
-            " SVGViewBox: width " + svginfo.viewBox.baseVal.width + 
-            " SVGViewBox: height " + svginfo.viewBox.baseVal.height;
-        
-    }   
-    
-    window.onresize = function() {
-       /* let wiw = document.getElementById("wiw");
-        let wih = document.getElementById("wih");
-        wiw.innerText = "Window Inner Width: " + window.innerWidth;
-        wih.innerText = "Window Inner Height: " + window.innerHeight; */
-        guitarNeckInstance.adjustNeckWidth();             
-    }
-
-    displayLayout.addEventListener('change', () => {
-        let selectedLayout = document.getElementById('displayLayout').value;
-        guitarNeckInstance.setNeckLayout(selectedLayout);
-    });
 
     function handleStringPreview() {
         let stringRootNote = document.getElementById('stringRootNote').value;
@@ -154,24 +113,10 @@
             moveStringPreview(srnInt, sroInt);                        
         }
     }
-
-    stringRootNote.addEventListener('change', () => {
-        handleStringPreview();        
-    });
-
+    
     stringRootNote.addEventListener('change', () => {
         handleStringPreview();
     });
-
-    function toggleAllNotes() {
-        if (guitarNeckInstance.AllNotesAreHidden()) {
-            guitarNeckInstance.showAllNotes();            
-            document.getElementById('toggleAllNotesBtn').innerText = 'Hide all Notes';
-            return;
-        }
-        guitarNeckInstance.hideAllNotes();
-        document.getElementById('toggleAllNotesBtn').innerText = 'Show all Notes';
-    }
 
     addStringToNeckBtn.addEventListener('click', () => {
         let dialog = document.getElementById('addStringDialog');        
@@ -194,13 +139,7 @@
         let newStringRootNoteNumber = parseInt(selectedStringRootNote) + (12 * parseInt(selectedStringRootOctave));
         guitarNeckInstance.addStringToNeck(newStringRootNoteNumber);
         dialog.close();
-    });
-
-    zoom_slider.addEventListener('change', () => {
-        let zoomValue = document.getElementById('zoom_slider').value;
-        console.log(zoomValue);
-        guitarNeckInstance.zoomNeck(zoomValue);
-    });    
+    });  
 
     stringRootNote.addEventListener('change', () => {
         let stringRootNote = document.getElementById('stringRootNote').value;
@@ -226,8 +165,7 @@
         let scaleType = document.getElementById('scaleType').value;
         guitarNeckInstance.ShowScale(scaleRootNote, scaleType);
     }
-
-
-    
+   
 </script> -->
+
 </html>

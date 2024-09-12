@@ -34,7 +34,7 @@ class GuitarNeck {
         this.layout_options = Array.of(new Layout('LEFTY_INSTRUCTOR','ASC','ASC'), 
             new Layout('GUITAR_TABISH','DESC','ASC'), 
             new Layout('RIGHTY_INSTRUCTOR','ASC','DESC'));
-        this.layout = this.layout_options[0];    
+        this.layout = this.layout_options[1];
         this.layout.print_layout();
         this.working_tuning_array = this.make_working_tuning_array();
     }
@@ -71,18 +71,21 @@ class GuitarNeck {
         let svg_width = window.innerWidth;
         let svg_view_box_width = window.innerWidth - 50;    
         let svg_height = window.innerHeight - 300;
-        let view_box_y = (((svg_height - 200) / 2) * -1);
         this.svg.setAttribute("id", "neckSvg");        
         this.svg.setAttribute("width", svg_width);
         this.svg.setAttribute("height", svg_height);
+        // starting view_box_y value is the height of the svg element minus 200, divided by 2, then multiplied by -1.
+        // this centers the view box vertically on the svg element.
+        let view_box_y = (((svg_height - 200) / 2) * -1);                 
         let view_box_values = "0 " + view_box_y + " " + svg_view_box_width + " " + svg_height;
         this.svg.setAttribute("viewBox", view_box_values);
+
 
         // The fingerBoards vertical size is based on the number of strings
         // and the horizontal size is based initially on width of the page 
         //     but is overridden by the last visible fret.
         // (This compensates zooming in and out of the page)
-        this.fingerBoard = new FingerBoard(this.svgNS).render();
+        this.fingerBoard = new FingerBoard(this.svgNS).render();        
         this.svg.appendChild(this.fingerBoard);
 
         this.fbInfo = document.createElementNS(this.svgNS, "text");
@@ -92,7 +95,7 @@ class GuitarNeck {
         this.fbInfo.setAttribute("class", "fb-info-text");
         this.fbInfo.setAttribute("text-anchor", "left");
         this.fbInfo.setAttribute("dy", ".5em");                     
-        this.fbInfo.textContent = "Finger Board Info: Width: 1500 Height: 180";
+        this.fbInfo.textContent = "Finger Board Info: Width: 1500 Height: 180";                
         this.svg.appendChild(this.fbInfo);
 
         this.nut = document.createElementNS(this.svgNS, "rect");
@@ -181,7 +184,6 @@ class GuitarNeck {
         }
         return inlay;
     }
-
 
     createStrings = () => {
         let stringCount = this.working_tuning_array.length;  
@@ -341,7 +343,7 @@ class GuitarNeck {
         this.svg.setAttribute('width', (pageWidth - this.svg_right_margin).toString());    
         this.lastVisibleFret();
         let lastFretX = parseInt(this.lastFret.getAttribute('x1'));
-        let newFingerBoardWidth = lastFretX - 30;
+        let newFingerBoardWidth = lastFretX;
         // Adjust the fingerboard width based on the last visible fret
         this.fingerBoard.setAttribute('width', newFingerBoardWidth);
         this.handleElementVisibility();
@@ -720,19 +722,23 @@ class GuitarNeck {
 //     }
 // }
 
-// GuitarNeck.prototype.zoomNeck = function(zoomValue) {
-//     let view_box = this.svg.getAttribute('viewBox').split(" ");
-//     let svgHeight = parseInt(this.svg.getAttribute('height'));
-//     let svgWidth = parseInt(this.svg.getAttribute('width'));
-//     let neckHeight = parseInt(this.fingerBoard.getAttribute('height'));
-    
-//     let min_vb_Y = (((svgHeight - neckHeight) / 2) * -1);
-//     let max_vb_Y = 0;
-
-//     let new_vb_Y = min_vb_Y * (zoomValue / 100);
-    
-//     view_box[1] = new_vb_Y.toString();
-// }
+    zoomNeck = (zoomValue) => {
+        let view_box = this.svg.getAttribute('viewBox').split(" ");
+        let svgH = this.svg.getAttribute('height');
+        let svhW = this.svg.getAttribute('width');
+        let svgRatio = svgH / svhW;
+        let neckH = parseInt(this.fingerBoard.getAttribute('height')) + 30;        
+        let diff = svgH - neckH;
+        let newHeight = svgH - (diff * (zoomValue / 100));
+        let newWidth = newHeight / svgRatio;
+        let ydiff = (svgH - neckH) / 2;
+        // newY is the svg height minus the neck height divided by 2 minus 15
+        let newY = (ydiff * (1.0 - (zoomValue / 100))) * -1;
+        view_box[1] = newY.toString();
+        view_box[2] = newWidth.toString();
+        view_box[3] = newHeight.toString();
+        this.svg.setAttribute('viewBox', view_box.join(" "));
+    }
 
     print_layout = (curLayout) => {
         console.log(`Layout Name: ${curLayout.layout_name}`);
@@ -741,8 +747,15 @@ class GuitarNeck {
     }
 
     setNeckLayout = (layoutName) => {
-        this.layout = this.layout_options.find(l => l.layout_name.toLowerCase() == layoutName.toLowerCase());    
-        this.print_layout(this.layout);
+        // console.log(layoutName);
+        // let layout1 = this.layout_options[0].name.toLowerCase();
+        // console.log(layout1);
+        // let layout2 = this.layout_options[1].name.toLowerCase();
+        //  console.log(layout2);
+        // let layout3 = this.layout_options[2].name.toLowerCase();
+        // console.log(layout3);
+
+        this.layout = layoutName.toUpperCase();    
         this.working_tuning_array = this.make_working_tuning_array();
         this.render();
     }
