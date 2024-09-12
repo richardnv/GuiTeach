@@ -19,13 +19,15 @@
         <select id="displayLayout" name="displayLayout">
             <option value="Lefty_Instructor">Lefty Instructor</option>
             <option selected value="Guitar_Tabish">Guitar Tab-ish</option>
-            <option value="Righty_Instructor">Righty Instructor</option>  
         </select>          
         <div id="guitar_neck_container">
 
         </div>    
+        <div id="horiz_scroll_container">
+            <input type="range" id="horiz_scroll_slider" min="0" max="50" value="0" step="1" style="width: 100%" />    
+        </div>
         <label for="zoom_slider">Zoom:</label>
-        <input type="range" id="zoom_slider" min="1" max="100" value="1" step="1"/>
+        <input type="range" id="zoom_slider" min="1" max="100" value="0" step="1"/>
         <div id="note_display">
             <h4 id="wiw"></h4>                        
             <p id="note_info"></p>
@@ -159,12 +161,6 @@
             stringRootOctaveCtrl.appendChild(option);
         }
     });
-
-    function showScale() {
-        let scaleRootNote = document.getElementById('scaleRootNote').value;        
-        let scaleType = document.getElementById('scaleType').value;
-        guitarNeckInstance.ShowScale(scaleRootNote, scaleType);
-    }
    
 </script> -->
 

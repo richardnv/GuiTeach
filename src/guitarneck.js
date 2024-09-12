@@ -32,8 +32,7 @@ class GuitarNeck {
         this.string_spacing = 30;
         this.fingerboardEdgeMargin = 15;
         this.layout_options = Array.of(new Layout('LEFTY_INSTRUCTOR','ASC','ASC'), 
-            new Layout('GUITAR_TABISH','DESC','ASC'), 
-            new Layout('RIGHTY_INSTRUCTOR','ASC','DESC'));
+            new Layout('GUITAR_TABISH','DESC','ASC'));
         this.layout = this.layout_options[1];
         this.layout.print_layout();
         this.working_tuning_array = this.make_working_tuning_array();
@@ -41,11 +40,15 @@ class GuitarNeck {
 
     make_working_tuning_array = () => {
         let sortedTuning = this.tuning_array_raw;
-        console.log(`PreSort: ${sortedTuning}`);
-        if (this.layout.string_order == "DESC") {
+        //console.log(`PreSort: ${sortedTuning}`);
+        let curSortDirection = "DESC";
+        if (this.tuning_array_raw[0] < this.tuning_array_raw[this.tuning_array_raw.length - 1]) {
+            curSortDirection = "ASC";
+        }
+        if (this.layout.string_order != curSortDirection) {
             sortedTuning.reverse();
         }
-        console.log(`PostSort: ${sortedTuning}`);
+        // console.log(`PostSort: ${sortedTuning}`);
         return sortedTuning;
     }
     
@@ -124,6 +127,9 @@ class GuitarNeck {
             let fret = this.createFret(i);
             this.svg.appendChild(fret);
         }
+        let lastFretX = parseInt(this.lastFret.getAttribute('x1'));
+        let newFingerBoardWidth = lastFretX -10;
+        this.fingerBoard.setAttribute('width', newFingerBoardWidth);
     }
 
     createFret = (fretIndex) => {
@@ -206,8 +212,8 @@ class GuitarNeck {
 // }
 
     createString = (stringIndex) => {         
-        console.log(`Local Tuning Array: ${this.working_tuning_array}`);
-        console.log(`String index: ${stringIndex}, Tuning Value: ${this.working_tuning_array[stringIndex]}`);
+        // console.log(`Local Tuning Array: ${this.working_tuning_array}`);
+        // console.log(`String index: ${stringIndex}, Tuning Value: ${this.working_tuning_array[stringIndex]}`);
         let string = document.createElementNS(this.svgNS, "line");
         let fbY = parseInt(this.fingerBoard.getAttribute("y"));        
         // let fbHeight = parseInt(this.fingerBoard.getAttribute("height"));    
@@ -337,18 +343,18 @@ class GuitarNeck {
         });
     }
 
-    adjustNeckWidth = () => {
-        let pageWidth = window.innerWidth;
-        // Example: Adjust the rectangle width based on the page width     
-        this.svg.setAttribute('width', (pageWidth - this.svg_right_margin).toString());    
-        this.lastVisibleFret();
-        let lastFretX = parseInt(this.lastFret.getAttribute('x1'));
-        let newFingerBoardWidth = lastFretX;
-        // Adjust the fingerboard width based on the last visible fret
-        this.fingerBoard.setAttribute('width', newFingerBoardWidth);
-        this.handleElementVisibility();
-        return this.lastFret.getAttribute('id');    
-    } 
+    // adjustNeckWidth = () => {
+    //     let pageWidth = window.innerWidth;
+    //     // Example: Adjust the rectangle width based on the page width     
+    //     this.svg.setAttribute('width', (pageWidth - this.svg_right_margin).toString());    
+    //     this.lastVisibleFret();
+    //     let lastFretX = parseInt(this.lastFret.getAttribute('x1'));
+    //     let newFingerBoardWidth = lastFretX;
+    //     // Adjust the fingerboard width based on the last visible fret
+    //     this.fingerBoard.setAttribute('width', newFingerBoardWidth);
+    //     this.handleElementVisibility();
+    //     return this.lastFret.getAttribute('id');    
+    // } 
 
     handleElementVisibility = () => {
         let fret_index = parseInt(this.lastFret.getAttribute('data-fret-index'));    
@@ -627,7 +633,6 @@ class GuitarNeck {
         return scaleNotes;
     }
 
-
 // GuitarNeck.prototype.renderStringPreview = function() {
 
 //     let pv_fb_margin = 10;
@@ -740,6 +745,15 @@ class GuitarNeck {
         this.svg.setAttribute('viewBox', view_box.join(" "));
     }
 
+    scrollNeck = (scrollValue) => {
+        let view_box = this.svg.getAttribute('viewBox').split(" ");        
+        let svgW = this.svg.getAttribute('width');
+        let scrollMod = (svgW / view_box[2] / 2);
+        let newX = (svgW * (scrollValue / 100)) * scrollMod;
+        view_box[0] = newX.toString();        
+        this.svg.setAttribute('viewBox', view_box.join(" "));
+    }
+
     print_layout = (curLayout) => {
         console.log(`Layout Name: ${curLayout.layout_name}`);
         console.log(`String Order: ${curLayout.string_order}`);
@@ -747,17 +761,8 @@ class GuitarNeck {
     }
 
     setNeckLayout = (layoutName) => {
-        // console.log(layoutName);
-        // let layout1 = this.layout_options[0].name.toLowerCase();
-        // console.log(layout1);
-        // let layout2 = this.layout_options[1].name.toLowerCase();
-        //  console.log(layout2);
-        // let layout3 = this.layout_options[2].name.toLowerCase();
-        // console.log(layout3);
-
         this.layout = layoutName.toUpperCase();    
-        this.working_tuning_array = this.make_working_tuning_array();
-        this.render();
+        this.working_tuning_array = this.make_working_tuning_array();                
     }
 }
 
