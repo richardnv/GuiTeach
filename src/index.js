@@ -90,29 +90,29 @@ function handleStringPreview() {
     }
 }
  
-// stringRootNote.addEventListener('change', () => {
-//     handleStringPreview();
-// });
+document.getElementById("stringRootNote").addEventListener('change', () => {
+    handleStringPreview();
+});
 
-// addStringToNeckBtn.addEventListener('click', () => {
-//     let dialog = document.getElementById('addStringDialog');        
-//     let previewDiv  = document.getElementById('stringPreview');
-//     dialog.showModal();
-//     previewDiv.innerHTML = '';
-//     previewDiv.appendChild(guitarNeckInstance.renderStringPreview());
+document.getElementById("addStringToNeckBtn").addEventListener('click', () => {
+    let dialog = document.getElementById('addStringDialog');        
+    let previewDiv  = document.getElementById('stringPreview');
+    dialog.showModal();
+    previewDiv.innerHTML = '';
+    previewDiv.appendChild(guitarNeckInstance.renderStringPreview());
 
-// });
+});
 
-// cancelAddStringBtn.addEventListener('click', () => {
-//     let dialog = document.getElementById('addStringDialog');
-//     dialog.close();
-// });
+document.getElementById("cancelAddStringBtn").addEventListener('click', () => {
+    let dialog = document.getElementById('addStringDialog');
+    dialog.close();
+});
 
-// addStringBtn.addEventListener('click', () => {
-//     let dialog = document.getElementById('addStringDialog');                
-//     let selectedStringRootNote = document.getElementById('stringRootNote').value;
-//     let selectedStringRootOctave = document.getElementById('stringRootOctave').value;
-//     let newStringRootNoteNumber = parseInt(selectedStringRootNote) + (12 * parseInt(selectedStringRootOctave));
-//     guitarNeckInstance.addStringToNeck(newStringRootNoteNumber);
-//     dialog.close();
-// });  
+document.getElementById("addStringBtn").addEventListener('click', () => {
+    let dialog = document.getElementById('addStringDialog');                
+    let selectedStringRootNote = document.getElementById('stringRootNote').value;
+    let selectedStringRootOctave = document.getElementById('stringRootOctave').value;
+    let newStringRootNoteNumber = parseInt(selectedStringRootNote) + (12 * parseInt(selectedStringRootOctave));
+    guitarNeckInstance.addStringToNeck(newStringRootNoteNumber);
+    dialog.close();
+});  

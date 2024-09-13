@@ -1,0 +1,5 @@
+# Ignore the bundle.js file
+public/bundle.js
+
+# You can also ignore other files or directories if needed
+node_modules/

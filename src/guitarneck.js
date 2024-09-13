@@ -633,99 +633,99 @@ class GuitarNeck {
         return scaleNotes;
     }
 
-// GuitarNeck.prototype.renderStringPreview = function() {
+renderStringPreview = function() {
 
-//     let pv_fb_margin = 10;
-//     let pv_string_spacing = 16;
-//     let stringCount = this.working_tuning_array.length;
-//     let pv_SVG_height = stringCount * pv_string_spacing + (pv_fb_margin * 2); // 6  = 6 * 16 + 10 * 2 = 96 + 20 = 116
+    let pv_fb_margin = 10;
+    let pv_string_spacing = 16;
+    let stringCount = this.working_tuning_array.length;
+    let pv_SVG_height = stringCount * pv_string_spacing + (pv_fb_margin * 2); // 6  = 6 * 16 + 10 * 2 = 96 + 20 = 116
 
 
-//     let stringPreviewSVG = document.createElementNS(this.svgNS, "svg");
-//     stringPreviewSVG.setAttribute("id", "stringPreviewSVG");
-//     stringPreviewSVG.setAttribute("x", "0");
-//     stringPreviewSVG.setAttribute("y", "0");
-//     stringPreviewSVG.setAttribute("width", "100");
-//     stringPreviewSVG.setAttribute("height", (pv_SVG_height).toString());    
-//     let stringPreviewNeck = document.createElementNS(this.svgNS, "rect");
-//     stringPreviewNeck.setAttribute("x", "10");
-//     stringPreviewNeck.setAttribute("y", "0");
-//     stringPreviewNeck.setAttribute("width", "90");
-//     stringPreviewNeck.setAttribute("height", (pv_SVG_height).toString());
-//     stringPreviewNeck.setAttribute("stroke", "black");
-//     stringPreviewNeck.setAttribute("stroke-width", "2");
-//     stringPreviewNeck.setAttribute("fill", "white");
-//     stringPreviewSVG.appendChild(stringPreviewNeck);
-//     let firstStringY = pv_fb_margin;
-//     for (let i = 0; i < this.working_tuning_array.length; i++) {
-//         let existingString = document.createElementNS(this.svgNS, "line");
-//         existingString.setAttribute("x1", "2");
-//         let thisStringY = firstStringY + (pv_string_spacing * i);        
-//         existingString.setAttribute("y1", (thisStringY).toString());
-//         existingString.setAttribute("x2", "100");
-//         existingString.setAttribute("y2", (thisStringY).toString());
-//         existingString.setAttribute("stroke", "black");
-//         existingString.setAttribute("stroke-width", "2");        
-//         stringPreviewSVG.appendChild(existingString);
-//     }
-//     let previewStringPointer = document.createElementNS(this.svgNS, "polygon");
-//     previewStringPointer.setAttribute("id", "previewStringPointer");
-//     let pointerCenterRef = firstStringY + (pv_string_spacing * stringCount);
-//     let pX1 = "0";
-//     let pY1 = (pointerCenterRef - 5).toString();
-//     let pX2 = "10";
-//     let pY2 = (pointerCenterRef).toString();
-//     let pY3 = (pointerCenterRef + 5).toString();
-//     previewStringPointer.setAttribute("points", `${pX1},${pY1} ${pX2},${pY2} ${pX1},${pY3}`);
-//     previewStringPointer.setAttribute("fill", "red");
-//     stringPreviewSVG.appendChild(previewStringPointer);
-//     let previewStringLine = document.createElementNS(this.svgNS, "line");        
-//     previewStringLine.setAttribute("id","previewStringLine");
-//     previewStringLine.setAttribute("x1","10");
-//     previewStringLine.setAttribute("x2","100");
-//     previewStringLine.setAttribute("y1",(pointerCenterRef).toString()); 
-//     previewStringLine.setAttribute("y2",(pointerCenterRef).toString()); 
-//     previewStringLine.setAttribute("stroke","red");
-//     previewStringLine.setAttribute("stroke-width","1.5");
-//     stringPreviewSVG.appendChild(previewStringLine);    
-//     return stringPreviewSVG;
-// }
+    let stringPreviewSVG = document.createElementNS(this.svgNS, "svg");
+    stringPreviewSVG.setAttribute("id", "stringPreviewSVG");
+    stringPreviewSVG.setAttribute("x", "0");
+    stringPreviewSVG.setAttribute("y", "0");
+    stringPreviewSVG.setAttribute("width", "100");
+    stringPreviewSVG.setAttribute("height", (pv_SVG_height).toString());    
+    let stringPreviewNeck = document.createElementNS(this.svgNS, "rect");
+    stringPreviewNeck.setAttribute("x", "10");
+    stringPreviewNeck.setAttribute("y", "0");
+    stringPreviewNeck.setAttribute("width", "90");
+    stringPreviewNeck.setAttribute("height", (pv_SVG_height).toString());
+    stringPreviewNeck.setAttribute("stroke", "black");
+    stringPreviewNeck.setAttribute("stroke-width", "2");
+    stringPreviewNeck.setAttribute("fill", "white");
+    stringPreviewSVG.appendChild(stringPreviewNeck);
+    let firstStringY = pv_fb_margin;
+    for (let i = 0; i < this.working_tuning_array.length; i++) {
+        let existingString = document.createElementNS(this.svgNS, "line");
+        existingString.setAttribute("x1", "2");
+        let thisStringY = firstStringY + (pv_string_spacing * i);        
+        existingString.setAttribute("y1", (thisStringY).toString());
+        existingString.setAttribute("x2", "100");
+        existingString.setAttribute("y2", (thisStringY).toString());
+        existingString.setAttribute("stroke", "black");
+        existingString.setAttribute("stroke-width", "2");        
+        stringPreviewSVG.appendChild(existingString);
+    }
+    let previewStringPointer = document.createElementNS(this.svgNS, "polygon");
+    previewStringPointer.setAttribute("id", "previewStringPointer");
+    let pointerCenterRef = firstStringY + (pv_string_spacing * stringCount);
+    let pX1 = "0";
+    let pY1 = (pointerCenterRef - 5).toString();
+    let pX2 = "10";
+    let pY2 = (pointerCenterRef).toString();
+    let pY3 = (pointerCenterRef + 5).toString();
+    previewStringPointer.setAttribute("points", `${pX1},${pY1} ${pX2},${pY2} ${pX1},${pY3}`);
+    previewStringPointer.setAttribute("fill", "red");
+    stringPreviewSVG.appendChild(previewStringPointer);
+    let previewStringLine = document.createElementNS(this.svgNS, "line");        
+    previewStringLine.setAttribute("id","previewStringLine");
+    previewStringLine.setAttribute("x1","10");
+    previewStringLine.setAttribute("x2","100");
+    previewStringLine.setAttribute("y1",(pointerCenterRef).toString()); 
+    previewStringLine.setAttribute("y2",(pointerCenterRef).toString()); 
+    previewStringLine.setAttribute("stroke","red");
+    previewStringLine.setAttribute("stroke-width","1.5");
+    stringPreviewSVG.appendChild(previewStringLine);    
+    return stringPreviewSVG;
+}
 
-// GuitarNeck.prototype.NewStringLocationPreview = function(proposedStringRootNote) {
-//     const proposedRootNote = parseInt(proposedStringRootNote);    
-//     let tuningArray = this.tuningMidiNumbers();
-//     let stringCount = this.working_tuning_array.length;    
-//     let targetPosition = null;
+NewStringLocationPreview = function(proposedStringRootNote) {
+    const proposedRootNote = parseInt(proposedStringRootNote);    
+    let tuningArray = this.tuningMidiNumbers();
+    let stringCount = this.working_tuning_array.length;    
+    let targetPosition = null;
 
-//     if (proposedStringRootNote < tuningArray[0]) {
-//         targetPosition = 0; // index of the first string
-//     } 
+    if (proposedStringRootNote < tuningArray[0]) {
+        targetPosition = 0; // index of the first string
+    } 
 
-//     // we need to find the existing string that the new string will be inserted before
-//     if (!targetPosition){        // if the target position has not been set
-//         for (let i = 1; i < stringCount; i++) {     // start at the second string 
-//             let currentStringRootNote = tuningArray[i];
-//             if (proposedRootNote < currentStringRootNote) {
-//                 // The new string will be inserted before the current string
-//                 targetPosition = i;
-//                 break;
-//             } else if (proposedRootNote == currentStringRootNote) {
-//                 // return a message indicating that the string already exists
-//                 targetPosition = -1;
-//                 break;
-//             }            
-//         }
-//         if (!targetPosition) {
-//             targetPosition = stringCount; // the new string will be added to the end of the tuning array
-//         }
-//     }           
+    // we need to find the existing string that the new string will be inserted before
+    if (!targetPosition){        // if the target position has not been set
+        for (let i = 1; i < stringCount; i++) {     // start at the second string 
+            let currentStringRootNote = tuningArray[i];
+            if (proposedRootNote < currentStringRootNote) {
+                // The new string will be inserted before the current string
+                targetPosition = i;
+                break;
+            } else if (proposedRootNote == currentStringRootNote) {
+                // return a message indicating that the string already exists
+                targetPosition = -1;
+                break;
+            }            
+        }
+        if (!targetPosition) {
+            targetPosition = stringCount; // the new string will be added to the end of the tuning array
+        }
+    }           
     
-//     // draw the representations.
-//     if (targetPosition >= 0) {
-//         let proposedString = this.createProposedString(targetPosition);
+    // // draw the representations.
+    // if (targetPosition >= 0) {
+    //     let proposedString = this.createProposedString(targetPosition);
         
-//     }
-// }
+    // }
+}
 
     zoomNeck = (zoomValue) => {
         let view_box = this.svg.getAttribute('viewBox').split(" ");
